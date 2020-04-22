@@ -69,8 +69,24 @@ firebase.auth().onAuthStateChanged((user)=> {
     startRsvpButton.textContent = "Sign Out";
     displayNameText.textContent = user.displayName
     userContainer.style.display = "flex";
+    guestbookContainer.style.display = "block";
   } else {
     startRsvpButton.textContent = "RSVP"
     userContainer.style.display = "none";
+    guestbookContainer.style.display = "none";
   }
+});
+
+form.addEventListener("submit", (e)=> {
+  e.preventDefault();
+  
+  firebase.firestore().collection("guestbook").add({
+    text: input.value, 
+    timestamp: Date.now(),
+    name: firebase.auth().currentUser.displayName,
+    userId: firebase.auth().currentUser.uid
+  });
+
+  input.value = "";
+  return false;
 });
